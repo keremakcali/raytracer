@@ -1,0 +1,9 @@
+build/
+*.o
+*.d
+*.out
+
+.cache/
+.clangd
+compile_commands.json
+.vscode/
