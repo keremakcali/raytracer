@@ -1,3 +1,4 @@
---std=c++11
+-xc++
+-std=c++17
 -Isrc
 -Iext

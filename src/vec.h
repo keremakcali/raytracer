@@ -1,7 +1,6 @@
 #ifndef VEC3_H
 #define VEC3_H
 
-#include <cstddef>
 #include <iostream>
 #include <string>
 

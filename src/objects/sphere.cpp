@@ -23,5 +23,5 @@ RayObjIntersection SphereObject::rayIntersection(const Ray &ray) {
 }
 
 std::ostream &operator<<(std::ostream &ostr, const SphereObject &sphere) {
-    return std::cout << "Sphere( " << *sphere.center << ", " << sphere.rad << ")";
+    return ostr << "Sphere( " << *sphere.center << ", " << sphere.rad << ")";
 }

@@ -4,8 +4,7 @@ Camera::Camera(const Vec3 &pos, const Vec3 &gaze, const Vec3 &up)
 {
     e = pos;
     w = -gaze.normalized();
-    u = (up - gaze * up.dot(gaze) / (gaze.length_squared())).normalized(); // orthonormal component of up wrt gaze in case they are not orthogonal
-    // ^^^^ i am not handlign if up and gaze are paralel here, i might need to check that i duno
+    u = (up - gaze * up.dot(gaze) / (gaze.length_squared())).normalized();
     v = u.cross(w);
 }
 

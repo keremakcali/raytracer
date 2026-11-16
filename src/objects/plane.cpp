@@ -13,5 +13,5 @@ RayObjIntersection PlaneObject::rayIntersection(const Ray &ray) {
 }
 
 std::ostream &operator<<(std::ostream &ostr, const PlaneObject &plane) {
-    return std::cout << "Plane( " << *plane.p << ", " << plane.n << ")";
+    return ostr << "Plane( " << *plane.p << ", " << plane.n << ")";
 }

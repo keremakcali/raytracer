@@ -3,6 +3,8 @@ build/
 *.d
 *.out
 
+sample_scenes/**
+
 .cache/
 .clangd
 compile_commands.json
