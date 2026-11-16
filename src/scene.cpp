@@ -43,7 +43,7 @@ RayObjIntersection Scene::intersectClosestObj(const Ray &ray) const
     int nObjects = objects.size();
     for (int i = 0; i < nObjects; i++)
     {
-        Object *obj = objects[i];
+        Object *obj = objects[i].get();
         RayObjIntersection intersection = obj->rayIntersection(ray);
         if (intersection.t < 0) {
             continue;
@@ -58,13 +58,13 @@ RayObjIntersection Scene::intersectClosestObj(const Ray &ray) const
 }
 
 
-Scene &Scene::parseSceneJson(std::ifstream &jsonFile)
+Scene Scene::parseSceneJson(std::ifstream &jsonFile)
 {
 
     picojson::value v;
     std::string err = picojson::parse(v, jsonFile);
 
-    Scene &scene = *(new Scene{});
+    Scene scene;
     if (!err.empty())
     {
         std::cerr << "Could not parse the file as a json" << std::endl;
@@ -114,7 +114,7 @@ Scene &Scene::parseSceneJson(std::ifstream &jsonFile)
     }
 
     if (auto field = sceneJson.find("MaxRecursionDepth"); field != sceneJson.end()) {
-        scene.maxRecursionDepth = std::stof(getStr(field->second));
+        scene.maxRecursionDepth = std::stoi(getStr(field->second));
     }
     
 
@@ -285,7 +285,7 @@ Scene &Scene::parseSceneJson(std::ifstream &jsonFile)
                                    ? std::stoi(getStr(sphereObject.at("Center")))
                                    : std::stoi(getStr(sphereObject.at("Point")));
                 float rad = std::stof(getStr(sphereObject.at("Radius")));
-                scene.objects.push_back(new SphereObject(scene.getMaterialP(matId), scene.getVertexP(centerId), rad));
+                scene.objects.push_back(std::make_unique<SphereObject>(scene.getMaterialP(matId), scene.getVertexP(centerId), rad));
             }
         }
 
@@ -302,7 +302,7 @@ Scene &Scene::parseSceneJson(std::ifstream &jsonFile)
                 Vec3 axis = Vec3(getStr(cylinderObject.at("Axis")));
                 float radius = std::stof(getStr(cylinderObject.at("Radius")));
                 float height = std::stof(getStr(cylinderObject.at("Height")));
-                scene.objects.push_back(new CylinderObject(scene.getMaterialP(matId), scene.getVertexP(pointId), axis, height, radius));
+                scene.objects.push_back(std::make_unique<CylinderObject>(scene.getMaterialP(matId), scene.getVertexP(pointId), axis, height, radius));
             }
         }
 
@@ -319,7 +319,7 @@ Scene &Scene::parseSceneJson(std::ifstream &jsonFile)
                 std::stringstream ss(indicesStr);
                 int idx0, idx1, idx2;
                 if (ss >> idx0 >> idx1 >> idx2) {
-                    scene.objects.push_back(new TriangleObject(scene.getMaterialP(matId), scene.getVertexP(idx0), scene.getVertexP(idx1), scene.getVertexP(idx2)));
+                    scene.objects.push_back(std::make_unique<TriangleObject>(scene.getMaterialP(matId), scene.getVertexP(idx0), scene.getVertexP(idx1), scene.getVertexP(idx2)));
                 }
             }
         }
@@ -340,7 +340,7 @@ Scene &Scene::parseSceneJson(std::ifstream &jsonFile)
                 int j = 0;
                 while (ss >> indices[j++]) {
                     if (j >= 3) {
-                        scene.objects.push_back(new TriangleObject(scene.getMaterialP(matId), scene.getVertexP(indices[0]), scene.getVertexP(indices[1]), scene.getVertexP(indices[2])));
+                        scene.objects.push_back(std::make_unique<TriangleObject>(scene.getMaterialP(matId), scene.getVertexP(indices[0]), scene.getVertexP(indices[1]), scene.getVertexP(indices[2])));
                         j = 0;
                     }
                 }
@@ -358,18 +358,10 @@ Scene &Scene::parseSceneJson(std::ifstream &jsonFile)
                                   ? std::stoi(getStr(planeObject.at("Center")))
                                   : std::stoi(getStr(planeObject.at("Point")));
                 Vec3 normal = Vec3(getStr(planeObject.at("Normal")));
-                scene.objects.push_back(new PlaneObject(scene.getMaterialP(matId), scene.getVertexP(pointId), normal));
+                scene.objects.push_back(std::make_unique<PlaneObject>(scene.getMaterialP(matId), scene.getVertexP(pointId), normal));
             }
         }
     }
 
     return scene;
-}
-
-Scene::~Scene()
-{
-    int nObjects = objects.size();
-    for (int i = 0; i < nObjects; i++) {
-        delete objects[i];
-    }
 }

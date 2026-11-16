@@ -16,7 +16,14 @@ RayObjIntersection SphereObject::rayIntersection(const Ray &ray) {
     if (det < 0) {
         return RayObjIntersection::noIntersection(ray);
     }
-    float t = (-b - std::sqrt(det)) / 2; // smaller of the intersections
+    float sqrtDet = std::sqrt(det);
+    float t = (-b - sqrtDet) / 2;
+    if (t < 0) {
+        t = (-b + sqrtDet) / 2;
+    }
+    if (t < 0) {
+        return RayObjIntersection::noIntersection(ray);
+    }
     Vec3 normal = (o + d * t - C).normalized();
 
     return RayObjIntersection{t, ray, normal, this};

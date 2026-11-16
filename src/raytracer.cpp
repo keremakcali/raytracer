@@ -76,11 +76,8 @@ Vec3 RayTracer::shade(const RayObjIntersection &intersection, int depth) const {
         Ray reflected{intersectionPos, (intersection.ray.d - 2 * a).normalized()};
         reflected.o += reflected.d * scene.shadowRayEpsilon;
         RayObjIntersection mirrorThing = scene.intersectClosestObj(reflected);
-        if (mirrorThing.obj)
-        {
-            Vec3 mirrorShade = shade(mirrorThing, depth + 1) * intersection.obj->getMaterial().mirrorR;
-            totalShade += mirrorShade;
-        }
+        Vec3 mirrorShade = shade(mirrorThing, depth + 1) * intersection.obj->getMaterial().mirrorR;
+        totalShade += mirrorShade;
     }
 
         Vec3 ambientShade = scene.getAmbientLight().intensity * intersection.obj->getMaterial().ambientR;
@@ -103,20 +100,6 @@ Vec3 RayTracer::specularShading(const Light &light, const RayObjIntersection &ob
         return shade;
     }
 
-RayObjIntersection RayTracer::traceRay(Ray ray, int depth) const {
-    RayObjIntersection intersection = scene.intersectClosestObj(ray);
-    if (depth < scene.maxRecursionDepth && intersection.obj && intersection.obj->getMaterial().mirrorR.length_squared() > 0.01) {
-        Vec3 intersectionPos = intersection.ray.at(intersection.t);
-        Vec3 a = intersection.ray.d.proj(intersection.normal);
-        Ray reflected{intersectionPos, intersection.ray.d - 2 * a};
-        std::cout << reflected.d.length() << std::endl;
-        reflected.o += reflected.d * scene.shadowRayEpsilon;
-        intersection = traceRay(reflected, depth + 1);
-    }
-    return intersection;
-}
-
 void RayTracer::writeColor(std::ofstream &file, Vec3 &color) const {
     file << (int) color.r() << " " << (int) color.g() << " " << (int) color.b() << "\n";
-    // sending float to output buffer is expensive :()
 }

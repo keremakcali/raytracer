@@ -12,7 +12,7 @@ int main(int argc, char **argv) {
     }
 
     std::ifstream file(argv[1]);
-    Scene &scene = Scene::parseSceneJson(file);
+    Scene scene = Scene::parseSceneJson(file);
     RayTracer rt = RayTracer(scene);
     rt.render();
 }

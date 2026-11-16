@@ -9,6 +9,7 @@
 #include "intersection.h"
 #include "objects/object.h"
 #include <fstream>
+#include <memory>
 #include <vector>
 
 class Scene
@@ -17,11 +18,9 @@ public:
     Vec3 backgroundColor;
 
     float shadowRayEpsilon = 1e-3;
-    float maxRecursionDepth = 6;
+    int maxRecursionDepth = 6;
 
-    static Scene &parseSceneJson(std::ifstream &jsonFile);
-
-    void addMaterial(Material material);
+    static Scene parseSceneJson(std::ifstream &jsonFile);
 
     const Material &getMaterial(int id) const;
     const Material *getMaterialP(int id) const;
@@ -34,13 +33,10 @@ public:
     const std::vector<Light> &getPointLights() const;
 
     RayObjIntersection intersectClosestObj(const Ray &pxRay) const;
-    RayObjIntersection intersectAnyObj(const Ray &ray) const;
-
-    ~Scene();
 
 private:
-    Scene() {};
-    std::vector<Object *> objects;
+    Scene() = default;
+    std::vector<std::unique_ptr<Object>> objects;
     std::vector<Camera> cameras;
     std::vector<Light> pointLights;
     Light ambientLight = Light::createAmbient(Vec3(0.0));
