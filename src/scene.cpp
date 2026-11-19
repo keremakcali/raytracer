@@ -3,7 +3,6 @@
 #include "objects/sphere.h"
 #include "objects/triangle.h"
 #include "objects/plane.h"
-#include "objects/cylinder.h"
 
 #include <cmath>
 #include <iostream>
@@ -286,23 +285,6 @@ Scene Scene::parseSceneJson(std::ifstream &jsonFile)
                                    : std::stoi(getStr(sphereObject.at("Point")));
                 float rad = std::stof(getStr(sphereObject.at("Radius")));
                 scene.objects.push_back(std::make_unique<SphereObject>(scene.getMaterialP(matId), scene.getVertexP(centerId), rad));
-            }
-        }
-
-        if (auto field = objectsJson.find("Cylinder"); field != objectsJson.end()) {
-            picojson::array cylinderObjects = asArray(field->second);
-            int nCylinderObjects = cylinderObjects.size();
-            for (int i = 0; i < nCylinderObjects; i++) {
-                if (!cylinderObjects[i].is<picojson::object>()) continue;
-                const picojson::object &cylinderObject = cylinderObjects[i].get<picojson::object>();
-                int matId = std::stoi(getStr(cylinderObject.at("Material")));
-                int pointId = cylinderObject.find("Center") != cylinderObject.end()
-                                  ? std::stoi(getStr(cylinderObject.at("Center")))
-                                  : std::stoi(getStr(cylinderObject.at("Point")));
-                Vec3 axis = Vec3(getStr(cylinderObject.at("Axis")));
-                float radius = std::stof(getStr(cylinderObject.at("Radius")));
-                float height = std::stof(getStr(cylinderObject.at("Height")));
-                scene.objects.push_back(std::make_unique<CylinderObject>(scene.getMaterialP(matId), scene.getVertexP(pointId), axis, height, radius));
             }
         }
 
