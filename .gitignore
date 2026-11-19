@@ -2,6 +2,7 @@ build/
 *.o
 *.d
 *.out
+raytracer
 
 sample_scenes/**
 
@@ -9,3 +10,5 @@ sample_scenes/**
 .clangd
 compile_commands.json
 .vscode/
+
+*.ppm
