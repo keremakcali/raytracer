@@ -6,7 +6,7 @@ TriangleObject::TriangleObject(const Material *material, const Vec3 *a, const Ve
     normal = (*b - *a).cross(*c - *a).normalized();
 }
 
-RayObjIntersection TriangleObject::rayIntersection(const Ray &ray)
+RayObjIntersection TriangleObject::rayIntersection(const Ray &ray) const
 {
     Vec3 n = normal;
     float dn = n.dot(ray.d);

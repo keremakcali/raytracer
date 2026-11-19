@@ -9,7 +9,7 @@ class SphereObject : public Object {
 public:
     SphereObject(const Material *material, const Vec3 *center, float radius);
 
-    RayObjIntersection rayIntersection(const Ray &ray) override;
+    RayObjIntersection rayIntersection(const Ray &ray) const override;
 
     friend std::ostream &operator<<(std::ostream &ostr, const SphereObject &sphere);
 

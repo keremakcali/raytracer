@@ -2,6 +2,6 @@
 
 Object::Object(const Material *material) : material(material) {}
 
-const Material &Object::getMaterial() {
+const Material &Object::getMaterial() const {
     return *material;
 }

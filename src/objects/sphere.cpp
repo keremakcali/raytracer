@@ -5,7 +5,7 @@
 SphereObject::SphereObject(const Material *material, const Vec3 *center, float radius)
     : Object(material), center(center), rad(radius) {}
 
-RayObjIntersection SphereObject::rayIntersection(const Ray &ray) {
+RayObjIntersection SphereObject::rayIntersection(const Ray &ray) const {
     Vec3 C = *center;
     Vec3 o = ray.o;
     Vec3 d = ray.d;

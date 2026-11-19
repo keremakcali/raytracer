@@ -10,7 +10,7 @@ class PlaneObject : public Object
 public:
     PlaneObject(const Material *material, const Vec3 *point, const Vec3 &normal);
 
-    RayObjIntersection rayIntersection(const Ray &ray) override;
+    RayObjIntersection rayIntersection(const Ray &ray) const override;
 
     friend std::ostream &operator<<(std::ostream &ostr, const PlaneObject &plane);
 

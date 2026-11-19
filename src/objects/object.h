@@ -9,9 +9,9 @@ class Object
 {
 public:
     virtual ~Object() = default;
-    virtual RayObjIntersection rayIntersection(const Ray &ray) = 0;
+    virtual RayObjIntersection rayIntersection(const Ray &ray) const = 0;
 
-    const Material &getMaterial();
+    const Material &getMaterial() const;
 
 protected:
     Object(const Material *material);

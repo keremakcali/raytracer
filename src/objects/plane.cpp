@@ -3,7 +3,7 @@
 PlaneObject::PlaneObject(const Material *material, const Vec3 *point, const Vec3 &normal)
     : Object(material), p(point), n(normal.normalized()) {}
 
-RayObjIntersection PlaneObject::rayIntersection(const Ray &ray) {
+RayObjIntersection PlaneObject::rayIntersection(const Ray &ray) const {
     float dn = n.dot(ray.d);
     if (dn == 0) {
         return RayObjIntersection::noIntersection(ray);
