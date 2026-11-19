@@ -7,6 +7,9 @@
 RayTracer::RayTracer(const Scene &scene) : scene(scene) {}
 
 Bitmap RayTracer::render() {
+    if (scene.getCameras().empty()) {
+        throw RayTracerException("No cameras available to render");
+    }
     const Camera &cam = scene.getCameras()[0];
     const int res_h = cam.res_h;
     const int res_v = cam.res_v;

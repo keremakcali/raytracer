@@ -2,6 +2,9 @@
 
 Camera::Camera(const Vec3 &pos, const Vec3 &gaze, const Vec3 &up)
 {
+    if (gaze.length_squared() == 0.0f || up.cross(gaze).length_squared() == 0.0f) {
+        throw MathException("Camera gaze and up vectors cannot be zero or parallel");
+    }
     e = pos;
     w = -gaze.normalized();
     u = (up - gaze * up.dot(gaze) / (gaze.length_squared())).normalized();

@@ -103,7 +103,7 @@ Vec3 Vec3::round() const {
 
 Ray::Ray(const Vec3 &origin, const Vec3 &direction) : o(origin), d(direction) {
     if (std::abs(d.length() - 1) > 0.001) {
-        throw 1;
+        throw MathException("Ray direction must be normalized");
     }
 }
 

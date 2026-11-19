@@ -8,6 +8,9 @@
 
 void writeImage(const Bitmap &bitmap, const std::string &filename) {
     std::ofstream outFile(filename, std::ios::binary);
+    if (!outFile.is_open()) {
+        throw FileIOException("Could not open output file: " + filename);
+    }
     outFile << "P6\n";
     outFile << bitmap.width << " " << bitmap.height << "\n";
     outFile << "255\n";
@@ -20,9 +23,20 @@ int main(int argc, char **argv) {
         return 1;
     }
 
-    std::ifstream file(argv[1]);
-    Scene scene = Scene::parseSceneJson(file);
-    RayTracer rt = RayTracer(scene);
-    Bitmap bitmap = rt.render();
-    writeImage(bitmap, argv[3]);
+    try {
+        std::ifstream file(argv[1]);
+        if (!file.is_open()) {
+            throw FileIOException(std::string("Could not open input file: ") + argv[1]);
+        }
+        Scene scene = Scene::parseSceneJson(file);
+        RayTracer rt = RayTracer(scene);
+        Bitmap bitmap = rt.render();
+        writeImage(bitmap, argv[3]);
+    } catch (const RayTracerException &e) {
+        std::cerr << "Error: " << e.what() << "\n";
+        return 1;
+    } catch (const std::exception &e) {
+        std::cerr << "Unexpected error: " << e.what() << "\n";
+        return 1;
+    }
 }

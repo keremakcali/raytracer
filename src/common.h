@@ -3,6 +3,7 @@
 
 #include <cstdint>
 #include <iostream>
+#include <stdexcept>
 #include <string>
 #include <vector>
 
@@ -68,6 +69,26 @@ struct Bitmap {
     int width;
     int height;
     std::vector<Color> pixels;
+};
+
+class RayTracerException : public std::runtime_error {
+public:
+    using std::runtime_error::runtime_error;
+};
+
+class FileIOException : public RayTracerException {
+public:
+    using RayTracerException::RayTracerException;
+};
+
+class SceneParseException : public RayTracerException {
+public:
+    using RayTracerException::RayTracerException;
+};
+
+class MathException : public RayTracerException {
+public:
+    using RayTracerException::RayTracerException;
 };
 
 #endif

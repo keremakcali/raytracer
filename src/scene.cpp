@@ -9,18 +9,30 @@
 #include <sstream>
 
 const Material &Scene::getMaterial(int id) const {
+    if (id < 1 || id > static_cast<int>(materials.size())) {
+        throw SceneParseException("Invalid material ID: " + std::to_string(id));
+    }
     return materials[id - 1];
 }
 
 const Material *Scene::getMaterialP(int id) const {
+    if (id < 1 || id > static_cast<int>(materials.size())) {
+        throw SceneParseException("Invalid material ID: " + std::to_string(id));
+    }
     return &materials[id - 1];
 }
 
 const Vec3 &Scene::getVertex(int id) const {
+    if (id < 1 || id > static_cast<int>(verts.size())) {
+        throw SceneParseException("Invalid vertex ID: " + std::to_string(id));
+    }
     return verts[id - 1];
 }
 
 const Vec3 *Scene::getVertexP(int id) const {
+    if (id < 1 || id > static_cast<int>(verts.size())) {
+        throw SceneParseException("Invalid vertex ID: " + std::to_string(id));
+    }
     return &verts[id - 1];
 }
 
@@ -59,6 +71,9 @@ RayObjIntersection Scene::intersectClosestObj(const Ray &ray) const
 
 Scene Scene::parseSceneJson(std::ifstream &jsonFile)
 {
+    if (!jsonFile.is_open() || !jsonFile) {
+        throw FileIOException("Could not open scene file");
+    }
 
     picojson::value v;
     std::string err = picojson::parse(v, jsonFile);
@@ -66,14 +81,12 @@ Scene Scene::parseSceneJson(std::ifstream &jsonFile)
     Scene scene;
     if (!err.empty())
     {
-        std::cerr << "Could not parse the file as a json" << std::endl;
-        return scene;
+        throw SceneParseException("Could not parse JSON: " + err);
     }
 
     if (!v.is<picojson::object>())
     {
-        std::cerr << "JSON is not an object" << std::endl;
-        return scene;
+        throw SceneParseException("JSON root is not an object");
     }
 
     auto getStr = [](const picojson::value &val) -> std::string {
@@ -343,6 +356,10 @@ Scene Scene::parseSceneJson(std::ifstream &jsonFile)
                 scene.objects.push_back(std::make_unique<PlaneObject>(scene.getMaterialP(matId), scene.getVertexP(pointId), normal));
             }
         }
+    }
+
+    if (scene.cameras.empty()) {
+        throw SceneParseException("Scene must contain at least one camera");
     }
 
     return scene;
