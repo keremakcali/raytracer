@@ -6,38 +6,31 @@
 
 RayTracer::RayTracer(const Scene &scene) : scene(scene) {}
 
-void RayTracer::render() {
-        const std::vector<Camera> &cameras = scene.getCameras();
-        int nCameras = cameras.size();
-        for (int i = 0; i < nCameras; i++) {
-            const Camera &cam = cameras[i];
-            const int res_h = cam.res_h;
-            const int res_v = cam.res_v;
+Bitmap RayTracer::render() {
+    const Camera &cam = scene.getCameras()[0];
+    const int res_h = cam.res_h;
+    const int res_v = cam.res_v;
 
-            std::ofstream outFile(cam.imageName);
-            outFile << "P3\n";
-            outFile << res_h << " " << res_v << "\n";
-            outFile << "255\n";
-
-            int totalPixel = res_h * res_v;
-            std::vector<Vec3> pixelVals(totalPixel);
-            for (int y = 0; y < res_v; y++) {
-                std::cout << "\r" << res_h * y  << "/" << totalPixel << "           ";
-                for (int x = 0; x < res_h; x++) {
-                    Ray pxRay = cam.getPxRay(x, y);
-                    RayObjIntersection rayIntersection = scene.intersectClosestObj(pxRay);
-                    Vec3 color = shade(rayIntersection, 0).round().clip(255);
-                    int nPix = (y * res_h) + x;
-                    pixelVals[nPix] = color;
-                }
-            }
-            for (int i = 0; i < totalPixel; i++) {
-                writeColor(outFile, pixelVals[i]);
-            }
-
-            std::cout << "\r Completed!         \n";
+    int totalPixel = res_h * res_v;
+    std::vector<Color> pixelVals(totalPixel);
+    for (int y = 0; y < res_v; y++) {
+        std::cout << "\r" << res_h * y << "/" << totalPixel << "           ";
+        for (int x = 0; x < res_h; x++) {
+            Ray pxRay = cam.getPxRay(x, y);
+            RayObjIntersection rayIntersection = scene.intersectClosestObj(pxRay);
+            Vec3 color = shade(rayIntersection, 0).round().clip(255);
+            int nPix = (y * res_h) + x;
+            pixelVals[nPix] = Color{
+                static_cast<uint8_t>(color.r()),
+                static_cast<uint8_t>(color.g()),
+                static_cast<uint8_t>(color.b())
+            };
         }
     }
+
+    std::cout << "\r Completed!         \n";
+    return Bitmap{res_h, res_v, pixelVals};
+}
 
 Vec3 RayTracer::shade(const RayObjIntersection &intersection, int depth) const {
     if (!intersection.obj) {
@@ -99,7 +92,3 @@ Vec3 RayTracer::specularShading(const Light &light, const RayObjIntersection &ob
         Vec3 shade = objIntersection.obj->getMaterial().specularR * light.intensity * pow(cosp, objIntersection.obj->getMaterial().phongExp) / (light.pos-objIntersection.ray.at(objIntersection.t)).length_squared();
         return shade;
     }
-
-void RayTracer::writeColor(std::ofstream &file, Vec3 &color) const {
-    file << (int) color.r() << " " << (int) color.g() << " " << (int) color.b() << "\n";
-}

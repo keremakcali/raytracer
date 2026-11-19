@@ -2,7 +2,7 @@
 #define TRIANGLE_H
 
 #include "objects/object.h"
-#include "vec.h"
+#include "common.h"
 
 class TriangleObject : public Object
 {

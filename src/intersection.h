@@ -1,8 +1,7 @@
 #ifndef INTERSECTION_H
 #define INTERSECTION_H
 
-#include "ray.h"
-#include "vec.h"
+#include "common.h"
 
 class Object;
 

@@ -1,8 +1,7 @@
 #ifndef SCENE_H
 #define SCENE_H
 
-#include "vec.h"
-#include "ray.h"
+#include "common.h"
 #include "material.h"
 #include "camera.h"
 #include "light.h"

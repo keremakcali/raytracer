@@ -2,7 +2,7 @@
 #define CYLINDER_H
 
 #include "objects/object.h"
-#include "vec.h"
+#include "common.h"
 
 class CylinderObject : public Object {
 public:

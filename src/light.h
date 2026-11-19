@@ -2,7 +2,7 @@
 #define LIGHT_H
 
 #include <iostream>
-#include "vec.h"
+#include "common.h"
 
 enum class LightType : int
 {

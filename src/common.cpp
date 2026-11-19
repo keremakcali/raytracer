@@ -1,4 +1,4 @@
-#include "vec.h"
+#include "common.h"
 
 #include <cmath>
 #include <sstream>
@@ -99,4 +99,20 @@ Vec3 Vec3::clip(float upperLimit) const {
 
 Vec3 Vec3::round() const {
     return Vec3(std::round(vals[0]), std::round(vals[1]), std::round(vals[2]));
+}
+
+Ray::Ray(const Vec3 &origin, const Vec3 &direction) : o(origin), d(direction) {
+    if (std::abs(d.length() - 1) > 0.001) {
+        throw 1;
+    }
+}
+
+Vec3 Ray::at(float t) const {
+    return o + t * d;
+}
+
+Ray Ray::proj(const Vec3 &n, const Vec3 &p) {
+    Vec3 o_proj = o - o.proj(n);
+    Vec3 dir_proj = d - d.proj(n);
+    return Ray(o - o.proj(n), d - d.proj(n));
 }

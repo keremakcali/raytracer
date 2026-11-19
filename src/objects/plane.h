@@ -3,7 +3,7 @@
 
 #include <iostream>
 #include "objects/object.h"
-#include "vec.h"
+#include "common.h"
 
 class PlaneObject : public Object
 {

@@ -2,7 +2,7 @@
 #define MATERIAL_H
 
 #include <iostream>
-#include "vec.h"
+#include "common.h"
 
 class Material {
 public:

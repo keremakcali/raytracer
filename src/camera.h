@@ -1,8 +1,7 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
-#include "vec.h"
-#include "ray.h"
+#include "common.h"
 #include <iostream>
 #include <string>
 

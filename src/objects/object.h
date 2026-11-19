@@ -1,9 +1,9 @@
 #ifndef OBJECT_H
 #define OBJECT_H
 
+#include "common.h"
 #include "intersection.h"
 #include "material.h"
-#include "ray.h"
 
 class Object
 {
