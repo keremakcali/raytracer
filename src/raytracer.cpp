@@ -49,6 +49,10 @@ Vec3 RayTracer::shade(const RayObjIntersection &intersection, int depth) const {
 
         Light light = lights[i];
         Vec3 lightVec = light.pos - pos;
+        if (lightVec.dot(intersection.normal) <= 0)
+        {
+            continue;
+        }
         float lightT = lightVec.length();
         Ray shadowRay{pos, lightVec.normalized()};
         shadowRay.o += shadowRay.d * scene.shadowRayEpsilon;
